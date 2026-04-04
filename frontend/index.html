@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Railway Freight Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="header-rail"></div>
+    <div class="header-content">
+      <div class="logo-block">
+        <span class="logo-icon">🚂</span>
+        <div>
+          <div class="logo-title">INDIAN RAILWAY FREIGHT</div>
+          <div class="logo-sub">MANAGEMENT SYSTEM</div>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span id="live-date"></span>
+      </div>
+    </div>
+    <div class="header-rail"></div>
+  </header>
+
+  <main>
+    <section class="form-section">
+      <h2 class="section-title">FREIGHT QUOTATION REQUEST</h2>
+
+      <form id="freightForm">
+
+        <!-- Sender / Receiver -->
+        <div class="form-row">
+          <div class="field">
+            <label>SENDER NAME</label>
+            <input type="text" id="sender" placeholder="e.g. Ravi Logistics Pvt Ltd" required />
+          </div>
+          <div class="field">
+            <label>RECEIVER NAME</label>
+            <input type="text" id="receiver" placeholder="e.g. Delhi Warehousing Co." required />
+          </div>
+        </div>
+
+        <!-- Route -->
+        <div class="form-row">
+          <div class="field">
+            <label>ORIGIN STATION</label>
+            <input type="text" id="origin" placeholder="e.g. Mumbai CST" required />
+          </div>
+          <div class="field">
+            <label>DESTINATION STATION</label>
+            <input type="text" id="dest" placeholder="e.g. New Delhi" required />
+          </div>
+          <div class="field field--sm">
+            <label>DISTANCE (KM)</label>
+            <input type="number" id="distance" placeholder="1400" min="1" required />
+          </div>
+        </div>
+
+        <!-- Weight & Type -->
+        <div class="form-row">
+          <div class="field field--sm">
+            <label>WEIGHT (KG)</label>
+            <input type="number" id="weight" placeholder="500" min="1" step="0.1" required />
+          </div>
+          <div class="field">
+            <label>FREIGHT TYPE</label>
+            <div class="type-selector">
+              <button type="button" class="type-btn active" data-type="perishable">🥬 PERISHABLE</button>
+              <button type="button" class="type-btn" data-type="nonperishable">📦 NON-PERISHABLE</button>
+              <button type="button" class="type-btn" data-type="hazardous">☢️ HAZARDOUS</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic type-specific fields -->
+        <div id="typeFields">
+
+          <!-- Perishable -->
+          <div id="fields-perishable" class="type-fields active">
+            <div class="subheading">PERISHABLE DETAILS</div>
+            <div class="form-row">
+              <div class="field">
+                <label>EXPIRY WINDOW (HOURS)</label>
+                <input type="number" id="expiryHours" placeholder="48" min="1" />
+              </div>
+              <div class="field">
+                <label>TEMPERATURE CONTROL</label>
+                <div class="toggle-row">
+                  <label class="toggle">
+                    <input type="checkbox" id="tempControl" />
+                    <span class="slider"></span>
+                  </label>
+                  <span class="toggle-label" id="tempLabel">Not Required</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Non-Perishable -->
+          <div id="fields-nonperishable" class="type-fields">
+            <div class="subheading">NON-PERISHABLE DETAILS</div>
+            <div class="form-row">
+              <div class="field">
+                <label>PACKAGING TYPE</label>
+                <select id="packaging">
+                  <option value="crate">Crate</option>
+                  <option value="pallet">Pallet</option>
+                  <option value="loose">Loose</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>FRAGILE CARGO</label>
+                <div class="toggle-row">
+                  <label class="toggle">
+                    <input type="checkbox" id="fragile" />
+                    <span class="slider"></span>
+                  </label>
+                  <span class="toggle-label" id="fragileLabel">No</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hazardous -->
+          <div id="fields-hazardous" class="type-fields">
+            <div class="subheading">HAZARDOUS DETAILS</div>
+            <div class="form-row">
+              <div class="field">
+                <label>UN HAZARD CLASS (1–9)</label>
+                <select id="hazardClass">
+                  <option value="1">Class 1 — Explosives</option>
+                  <option value="2">Class 2 — Gases</option>
+                  <option value="3">Class 3 — Flammable Liquids</option>
+                  <option value="4">Class 4 — Flammable Solids</option>
+                  <option value="5">Class 5 — Oxidizers</option>
+                  <option value="6">Class 6 — Toxic / Infectious</option>
+                  <option value="7">Class 7 — Radioactive</option>
+                  <option value="8">Class 8 — Corrosives</option>
+                  <option value="9">Class 9 — Miscellaneous</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>SAFETY ESCORT REQUIRED</label>
+                <div class="toggle-row">
+                  <label class="toggle">
+                    <input type="checkbox" id="escort" />
+                    <span class="slider"></span>
+                  </label>
+                  <span class="toggle-label" id="escortLabel">No</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <span>GENERATE QUOTATION</span>
+          <span class="btn-arrow">→</span>
+        </button>
+
+      </form>
+    </section>
+
+    <!-- Quotation Output -->
+    <section class="quotation-section" id="quotationSection" style="display:none">
+      <div class="quotation-card" id="quotationCard">
+        <div class="q-header">
+          <div class="q-title-block">
+            <div class="q-label">FREIGHT QUOTATION</div>
+            <div class="q-id" id="q-shipmentId"></div>
+          </div>
+          <div class="q-date-block">
+            <div class="q-label">DATE ISSUED</div>
+            <div class="q-date" id="q-date"></div>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+
+        <div class="q-parties">
+          <div class="q-party">
+            <div class="q-label">FROM</div>
+            <div class="q-value" id="q-sender"></div>
+            <div class="q-station" id="q-origin"></div>
+          </div>
+          <div class="q-arrow">⟶</div>
+          <div class="q-party q-party--right">
+            <div class="q-label">TO</div>
+            <div class="q-value" id="q-receiver"></div>
+            <div class="q-station" id="q-dest"></div>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+
+        <div class="q-details-grid">
+          <div class="q-detail">
+            <span class="q-detail-label">FREIGHT TYPE</span>
+            <span class="q-detail-value" id="q-type"></span>
+          </div>
+          <div class="q-detail">
+            <span class="q-detail-label">WEIGHT</span>
+            <span class="q-detail-value" id="q-weight"></span>
+          </div>
+          <div class="q-detail">
+            <span class="q-detail-label">DISTANCE</span>
+            <span class="q-detail-value" id="q-distance"></span>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+
+        <div class="q-costs">
+          <div class="q-cost-row">
+            <span>Base Freight</span>
+            <span id="q-base">₹ —</span>
+          </div>
+          <div class="q-cost-row">
+            <span>Handling Charge</span>
+            <span id="q-handling">₹ —</span>
+          </div>
+          <div class="q-cost-row q-cost-total">
+            <span>TOTAL</span>
+            <span id="q-total">₹ —</span>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+
+        <div class="q-rules-block">
+          <div class="q-label">ROUTE & HANDLING RULES</div>
+          <div class="q-rules" id="q-rules"></div>
+        </div>
+
+        <div class="q-footer">
+          This quotation is valid for 7 days from the date of issue.
+          All charges are in Indian Rupees (INR). Subject to Railway tariff regulations.
+        </div>
+      </div>
+
+      <button class="download-btn" id="downloadBtn" onclick="downloadPDF()">
+        ⬇ DOWNLOAD PDF QUOTATION
+      </button>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
