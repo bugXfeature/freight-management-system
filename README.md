@@ -48,7 +48,7 @@ Install WSL with Ubuntu, then follow the Ubuntu steps above.
 ### Step 1 — Clone the repo
 ```bash
 git clone https://github.com/bugXfeature/freight-management-system.git
-cd freight-system
+cd freight-management-system
 ```
 
 ### Step 2 — Build the backend
