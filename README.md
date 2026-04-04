@@ -7,7 +7,7 @@ A full-stack web application for generating railway freight quotations, built wi
 ## 📁 Project Structure
 
 ```
-freight-system/
+freight-management-system/
 ├── backend/
 │   ├── freight.hpp         # Abstract base class — baseFreight(), pure virtual handlingCharge() & routeRules()
 │   ├── perishable.hpp      # Derived class — temperature control, expiry window
