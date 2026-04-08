@@ -63,7 +63,7 @@ int main() {
     // ── Static frontend files ─────────────────────────────────────
     // The frontend folder is at ../../frontend relative to the binary
     // which lives in backend/build/
-    const std::string FRONTEND = "/home/jesus/freight-system/frontend";
+    const std::string FRONTEND = "/home/jesus/freight-management-system/frontend";
 
     CROW_ROUTE(app, "/")([ &FRONTEND]() {
         std::string html = readFile(FRONTEND + "/index.html");
