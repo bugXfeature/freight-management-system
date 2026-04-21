@@ -9,33 +9,16 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-# ── Fetch Crow (header-only) ──────────────────────────────────────
-include(FetchContent)
-FetchContent_Declare(
-  Crow
-  GIT_REPOSITORY https://github.com/CrowCpp/Crow.git
-  GIT_TAG        master
-)
-FetchContent_MakeAvailable(Crow)
-
-# ── Find system deps that Crow needs ─────────────────────────────
-find_package(Threads REQUIRED)
-find_package(Boost REQUIRED)
-
-# ── Build target ─────────────────────────────────────────────────
-add_executable(freight_server
+# ── Build target (no external dependencies — Crow removed) ─────
+add_executable(freight_processor
     main.cpp
 )
 
-target_include_directories(freight_server PRIVATE
+target_include_directories(freight_processor PRIVATE
     ${CMAKE_SOURCE_DIR}
-    ${Boost_INCLUDE_DIRS}
 )
 
-target_link_libraries(freight_server PRIVATE
-    Crow::Crow
-    Threads::Threads
-    ${Boost_LIBRARIES}
-)
-
-target_compile_options(freight_server PRIVATE -O2 -Wall)
+# Simple compile — only standard library needed
+if(NOT MSVC)
+  target_compile_options(freight_processor PRIVATE -O2 -Wall)
+endif()
